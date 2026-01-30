@@ -24,6 +24,7 @@ public class FilesystemScreen : TaskWindow<string?>, IKeyboardFocus {
     private readonly VirtualScrollList<(EntryType type, string location)> entries;
     private string? fileName;
     private readonly string? extension;
+    private readonly string? placeholder;
     private readonly string button;
     private readonly string? defaultFileName;
     private readonly Func<string, bool>? filter;
@@ -32,12 +33,13 @@ public class FilesystemScreen : TaskWindow<string?>, IKeyboardFocus {
     private readonly IKeyboardFocus? previousFocus;
 
     public FilesystemScreen(string? header, string description, string button, string? location, Mode mode, string? defaultFileName,
-        Window parent, Func<string, bool>? filter, string? extension) {
+        Window parent, Func<string, bool>? filter, string? extension, string? placeholder = null) {
 
         this.description = description;
         this.mode = mode;
         this.defaultFileName = defaultFileName;
         this.extension = extension;
+        this.placeholder = placeholder;
         this.filter = filter;
         this.button = button;
         entries = new VirtualScrollList<(EntryType type, string location)>(30f, new Vector2(float.PositiveInfinity, 1.5f), BuildElement);
@@ -61,7 +63,7 @@ public class FilesystemScreen : TaskWindow<string?>, IKeyboardFocus {
         else {
             using (gui.EnterGroup(default, RectAllocator.RightRow)) {
                 BuildSelectButton(gui);
-                if (gui.RemainingRow().BuildTextInput(fileName, out fileName, null)) {
+                if (gui.RemainingRow().BuildTextInput(fileName, out fileName, placeholder)) {
                     UpdatePossibleResult();
                 }
             }
