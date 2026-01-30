@@ -653,7 +653,7 @@ public partial class MainScreen : WindowMain, IKeyboardFocus, IProgress<(string,
     private async Task<bool> SaveProjectAs() {
         string? projectPath = await new FilesystemScreen(LSs.SaveProjectWindowTitle, LSs.SaveProjectWindowHeader, LSs.Save,
             string.IsNullOrEmpty(project.attachedFileName) ? null : Path.GetDirectoryName(project.attachedFileName),
-            FilesystemScreen.Mode.SelectOrCreateFile, LSs.DefaultFileName, this, null, "yafc");
+            FilesystemScreen.Mode.SelectOrCreateFile, LSs.DefaultFileName, this, null, "yafc", "Enter Project Name");
         if (projectPath != null) {
             project.Save(projectPath);
             Preferences.Instance.AddProject(DataUtils.dataPath, DataUtils.modsPath, projectPath, DataUtils.expensiveRecipes, DataUtils.netProduction);
@@ -682,7 +682,7 @@ public partial class MainScreen : WindowMain, IKeyboardFocus, IProgress<(string,
 
         string? projectDirectory = string.IsNullOrEmpty(project.attachedFileName) ? null : Path.GetDirectoryName(project.attachedFileName);
         string? path = await new FilesystemScreen(LSs.LoadProjectWindowTitle, LSs.LoadProjectWindowHeader, LSs.Select, projectDirectory,
-            FilesystemScreen.Mode.SelectOrCreateFile, LSs.DefaultFileName, this, null, "yafc");
+            FilesystemScreen.Mode.SelectOrCreateFile, LSs.DefaultFileName, this, null, "yafc", "Enter Project Name");
 
         if (path == null) {
             return;

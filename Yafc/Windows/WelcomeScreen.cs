@@ -232,7 +232,7 @@ public class WelcomeScreen : WindowUtility, IProgress<(string, string)>, IKeyboa
             }
         }
         else {
-            BuildPathSelect(gui, path, LSs.WelcomeProjectFileLocation, LSs.WelcomeProjectFileLocationHint, EditType.Workspace);
+            BuildPathSelect(gui, path, LSs.WelcomeProjectFileLocation, LSs.WelcomeProjectFileLocationHint, EditType.Workspace, "Enter Project Name");
             BuildPathSelect(gui, dataPath, LSs.WelcomeDataLocation,
                 LSs.WelcomeDataLocationHint, EditType.Factorio);
             BuildPathSelect(gui, modsPath, LSs.WelcomeModLocation,
@@ -490,12 +490,12 @@ public class WelcomeScreen : WindowUtility, IProgress<(string, string)>, IKeyboa
         canCreate = factorioValid && modsValid;
     }
 
-    private void BuildPathSelect(ImGui gui, string path, string description, string placeholder, EditType editType) {
+    private void BuildPathSelect(ImGui gui, string path, string description, string placeholder, EditType editType, string? filePlaceholder = null) {
         gui.BuildText(description, TextBlockDisplayStyle.WrappedText);
         gui.spacing = 0.5f;
         using (gui.EnterGroup(default, RectAllocator.RightRow)) {
             if (gui.BuildButton(LSs.WelcomeBrowseButton)) {
-                ShowFileSelect(description, path, editType);
+                ShowFileSelect(description, path, editType, filePlaceholder);
             }
 
             if (gui.RemainingRow(0f).BuildTextInput(path, out path, placeholder)) {
@@ -610,7 +610,7 @@ public class WelcomeScreen : WindowUtility, IProgress<(string, string)>, IKeyboa
         _ => null,
     };
 
-    private async void ShowFileSelect(string description, string path, EditType type) {
+    private async void ShowFileSelect(string description, string path, EditType type, string? placeholder = null) {
         string buttonText;
         string? location, fileExtension;
         FilesystemScreen.Mode fsMode;
@@ -628,7 +628,7 @@ public class WelcomeScreen : WindowUtility, IProgress<(string, string)>, IKeyboa
             fileExtension = null;
         }
 
-        string? result = await new FilesystemScreen(LSs.SelectFolder, description, buttonText, location, fsMode, "", this, GetFolderFilter(type), fileExtension);
+        string? result = await new FilesystemScreen(LSs.SelectFolder, description, buttonText, location, fsMode, "", this, GetFolderFilter(type), fileExtension, placeholder);
 
         if (result != null) {
             if (type == EditType.Factorio) {
